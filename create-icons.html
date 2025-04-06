@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+</head>
+<body>
+    <canvas id="canvas" style="display: none;"></canvas>
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        function drawIcon(size) {
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#3498db');
+            gradient.addColorStop(1, '#2980b9');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Rocket shape
+            ctx.fillStyle = 'white';
+            const rocketSize = size * 0.6;
+            const x = (size - rocketSize) / 2;
+            const y = (size - rocketSize) / 2;
+            
+            ctx.beginPath();
+            ctx.moveTo(x + rocketSize/2, y);
+            ctx.lineTo(x + rocketSize, y + rocketSize);
+            ctx.lineTo(x, y + rocketSize);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Save as PNG
+            const link = document.createElement('a');
+            link.download = `icon-${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Generate all icon sizes
+        sizes.forEach(size => drawIcon(size));
+    </script>
+</body>
+</html> 

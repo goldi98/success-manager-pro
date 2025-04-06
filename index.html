@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#3498db">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Success Manager Pro - Your personal productivity assistant">
+    
+    <title>Success Manager Pro</title>
+    
+    <!-- PWA Icons -->
+    <link rel="icon" type="image/png" sizes="196x196" href="icons/icon-196.png">
+    <link rel="apple-touch-icon" href="icons/icon-180.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="logo">
+                <i class="fas fa-rocket"></i>
+                <h1>Success Manager Pro</h1>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-details">
+                    <div class="user-name">Premium User</div>
+                    <div class="user-role">Success Manager</div>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li data-section="tasks" class="active">
+                    <i class="fas fa-tasks"></i>
+                    <span>Tasks & Goals</span>
+                </li>
+                <li data-section="notes">
+                    <i class="fas fa-sticky-note"></i>
+                    <span>Notes</span>
+                </li>
+                <li data-section="calendar">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Calendar</span>
+                </li>
+                <li data-section="game">
+                    <i class="fas fa-gamepad"></i>
+                    <span>Game Break</span>
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="premium-badge">
+                    <i class="fas fa-crown"></i>
+                    <span>Premium Edition</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- Tasks Section -->
+            <section id="tasks" class="section active">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>Tasks & Goals</h2>
+                        <p class="section-description">Manage your tasks and track your goals</p>
+                    </div>
+                    <button class="btn-primary" onclick="showModal('taskModal')">
+                        <i class="fas fa-plus"></i>
+                        Add Task
+                    </button>
+                </div>
+                
+                <!-- Add Priorities Matrix Section -->
+                <div class="priorities-matrix">
+                    <div class="matrix-header">
+                        <h3>Eisenhower Matrix</h3>
+                        <button class="btn-primary" onclick="showModal('priorityModal')">
+                            <i class="fas fa-plus"></i>
+                            Add Priority Item
+                        </button>
+                    </div>
+                    <div class="matrix-grid">
+                        <div class="matrix-cell urgent important" id="doFirst">
+                            <h4>Do First</h4>
+                            <p>Urgent & Important</p>
+                            <div class="matrix-items"></div>
+                        </div>
+                        <div class="matrix-cell important" id="schedule">
+                            <h4>Schedule</h4>
+                            <p>Not Urgent but Important</p>
+                            <div class="matrix-items"></div>
+                        </div>
+                        <div class="matrix-cell urgent" id="delegate">
+                            <h4>Delegate</h4>
+                            <p>Urgent but Not Important</p>
+                            <div class="matrix-items"></div>
+                        </div>
+                        <div class="matrix-cell" id="eliminate">
+                            <h4>Eliminate</h4>
+                            <p>Not Urgent & Not Important</p>
+                            <div class="matrix-items"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="task-filters">
+                    <div class="filter-group">
+                        <label for="priorityFilter">Priority</label>
+                        <select id="priorityFilter" onchange="renderTasks()">
+                            <option value="all">All Priorities</option>
+                            <option value="urgent">Urgent</option>
+                            <option value="important">Important</option>
+                            <option value="normal">Normal</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="statusFilter">Status</label>
+                        <select id="statusFilter" onchange="renderTasks()">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="in-progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="taskList" class="task-list"></div>
+                
+                <div class="section-header" style="margin-top: 40px;">
+                    <div class="header-left">
+                        <h2>Goals</h2>
+                        <p class="section-description">Set and track your top 5 goals</p>
+                    </div>
+                    <button class="btn-primary" onclick="showModal('goalModal')">
+                        <i class="fas fa-plus"></i>
+                        Add Goal
+                    </button>
+                </div>
+                
+                <div id="goalsList" class="goals-list"></div>
+            </section>
+            
+            <!-- Notes Section -->
+            <section id="notes" class="section">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>Notes & Journal</h2>
+                        <p class="section-description">Capture your thoughts, learnings, and daily reflections</p>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn-primary" onclick="showModal('journalModal')">
+                            <i class="fas fa-book"></i>
+                            Add Journal Entry
+                        </button>
+                        <button class="btn-primary" onclick="showModal('noteModal')">
+                            <i class="fas fa-plus"></i>
+                            Add Note
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="notes-tabs">
+                    <button class="tab-button active" data-tab="notes">Notes</button>
+                    <button class="tab-button" data-tab="journal">Journal Entries</button>
+                </div>
+                
+                <div id="notesList" class="notes-container tab-content active"></div>
+                <div id="journalList" class="journal-container tab-content"></div>
+            </section>
+            
+            <!-- Calendar Section -->
+            <section id="calendar" class="section">
+                <div class="section-header">
+                    <div class="header-left">
+                        <h2>Calendar</h2>
+                        <p class="section-description">View your schedule and events</p>
+                    </div>
+                </div>
+                
+                <div class="calendar-nav">
+                    <button class="btn-icon" id="prevMonth">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <h3 id="currentMonth"></h3>
+                    <button class="btn-icon" id="nextMonth">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="calendar-container">
+                    <div class="calendar-header">
+                        <div>Sun</div>
+                        <div>Mon</div>
+                        <div>Tue</div>
+                        <div>Wed</div>
+                        <div>Thu</div>
+                        <div>Fri</div>
+                        <div>Sat</div>
+                    </div>
+                    <div id="calendarDays" class="calendar-days"></div>
+                </div>
+            </section>
+            
+            <!-- Game Section -->
+            <section id="game" class="section">
+                <div class="section-header">
+                    <h2>Minigame</h2>
+                    <p>Take a break and play a quick game to refresh your mind.</p>
+                </div>
+                <div class="game-container">
+                    <div class="game-info">
+                        <div class="score-container">
+                            <span>Score: </span>
+                            <span id="score">0</span>
+                        </div>
+                        <div class="game-instructions">
+                            <p>Use arrow keys or WASD to move the player.</p>
+                            <p>Collect stars to earn points.</p>
+                            <p>Avoid the red obstacles.</p>
+                            <p>Press SPACE to restart when game is over.</p>
+                        </div>
+                    </div>
+                    <canvas id="gameCanvas" width="800" height="600"></canvas>
+                </div>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Task Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Task</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <select id="priority" name="priority" required>
+                            <option value="urgent">Urgent</option>
+                            <option value="important">Important</option>
+                            <option value="normal">Normal</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dueDate">Due Date</label>
+                        <input type="date" id="dueDate" name="dueDate" required>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Goal Modal -->
+    <div id="goalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Goal</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="goalForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="priority">Priority</label>
+                        <select id="priority" name="priority" required>
+                            <option value="urgent">Urgent</option>
+                            <option value="important">Important</option>
+                            <option value="normal">Normal</option>
+                            <option value="low">Low</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="dueDate">Due Date</label>
+                        <input type="date" id="dueDate" name="dueDate" required>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Goal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Note Modal -->
+    <div id="noteModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Note</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="noteForm">
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">Content</label>
+                    <textarea id="content" name="content" required></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Day Details Modal -->
+    <div id="dayDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Day Details</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="dayDetailsContent" class="day-details-content"></div>
+        </div>
+    </div>
+    
+    <!-- Journal Modal -->
+    <div id="journalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Daily Journal Entry</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="journalForm">
+                <div class="form-group">
+                    <label for="journalDate">Date</label>
+                    <input type="date" id="journalDate" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="goodThings">What went well today?</label>
+                    <textarea id="goodThings" name="goodThings" required placeholder="List 3 things that went well today..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="learnings">What did you learn today?</label>
+                    <textarea id="learnings" name="learnings" required placeholder="What were your key learnings or insights?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="improvements">What could be improved?</label>
+                    <textarea id="improvements" name="improvements" required placeholder="What would you like to do better tomorrow?"></textarea>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Journal Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Update Priority Modal to be more scrollable -->
+    <div id="priorityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Priority Item</h3>
+                <button class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="priorityForm">
+                <div class="form-group">
+                    <label for="priorityTitle">Title</label>
+                    <input type="text" id="priorityTitle" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="priorityDescription">Description</label>
+                    <textarea id="priorityDescription" name="description" required></textarea>
+                </div>
+                <div class="form-group priority-type-group">
+                    <label>Priority Type</label>
+                    <div class="priority-options">
+                        <label class="priority-option">
+                            <input type="radio" name="priorityType" value="doFirst" required>
+                            <span>Do First (Urgent & Important)</span>
+                        </label>
+                        <label class="priority-option">
+                            <input type="radio" name="priorityType" value="schedule">
+                            <span>Schedule (Not Urgent but Important)</span>
+                        </label>
+                        <label class="priority-option">
+                            <input type="radio" name="priorityType" value="delegate">
+                            <span>Delegate (Urgent but Not Important)</span>
+                        </label>
+                        <label class="priority-option">
+                            <input type="radio" name="priorityType" value="eliminate">
+                            <span>Eliminate (Not Urgent & Not Important)</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Priority</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed: ', err);
+                    });
+            });
+        }
+    </script>
+    
+    <!-- Install Prompt -->
+    <div id="installPrompt" class="install-prompt">
+        <div class="install-prompt-content">
+            <p>Install Success Manager Pro on your device!</p>
+            <div class="install-buttons">
+                <button id="installButton" class="btn-primary">Install</button>
+                <button id="dismissInstall" class="btn-secondary">Not Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="game.js"></script>
+</body>
+</html> 
