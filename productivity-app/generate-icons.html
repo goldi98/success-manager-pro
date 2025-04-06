@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator for Success Manager Pro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .instructions {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .preview {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <h2>Icon Generator for Success Manager Pro</h2>
+        <p><strong>Follow these steps:</strong></p>
+        <ol>
+            <li>Make sure you have a folder called "icons" in your productivity-app folder</li>
+            <li>Click the "Generate Icons" button below</li>
+            <li>Save each icon file when prompted</li>
+            <li>Make sure to save them in the "icons" folder</li>
+        </ol>
+    </div>
+
+    <div class="preview">
+        <h3>Icon Preview:</h3>
+        <canvas id="previewCanvas" width="192" height="192"></canvas>
+    </div>
+
+    <div style="text-align: center;">
+        <button onclick="generateAllIcons()">Generate Icons</button>
+    </div>
+
+    <div id="status" class="status"></div>
+
+    <script>
+        const sizes = [72, 96, 128, 144, 152, 192, 384, 512];
+        const previewCanvas = document.getElementById('previewCanvas');
+        const previewCtx = previewCanvas.getContext('2d');
+        const status = document.getElementById('status');
+
+        // Draw preview icon
+        function drawIcon(ctx, size) {
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#3498db');
+            gradient.addColorStop(1, '#2980b9');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // "S" letter
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.6}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('S', size/2, size/2);
+            
+            // Circle around the letter
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = size * 0.05;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size * 0.4, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        // Draw preview
+        drawIcon(previewCtx, 192);
+
+        function generateIcon(size) {
+            return new Promise((resolve) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                const ctx = canvas.getContext('2d');
+                
+                drawIcon(ctx, size);
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.download = `icon-${size}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+                // Wait a bit between downloads
+                setTimeout(resolve, 500);
+            });
+        }
+
+        async function generateAllIcons() {
+            status.className = 'status';
+            status.innerHTML = 'Generating icons...';
+            
+            try {
+                for (const size of sizes) {
+                    await generateIcon(size);
+                }
+                status.className = 'status success';
+                status.innerHTML = `
+                    <p>✅ All icons generated successfully!</p>
+                    <p>Please make sure to:</p>
+                    <ol>
+                        <li>Check your downloads folder for the icon files</li>
+                        <li>Move all icon-*.png files to the "icons" folder in your productivity-app folder</li>
+                    </ol>
+                `;
+            } catch (error) {
+                status.innerHTML = '❌ Error generating icons. Please try again.';
+            }
+        }
+    </script>
+</body>
+</html> 

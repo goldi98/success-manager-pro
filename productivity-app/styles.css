@@ -1,0 +1,429 @@
+/* Base Styles */
+:root {
+    /* Light Mode Colors */
+    --bg-light: #ffffff;
+    --text-light: #2c3e50;
+    --sidebar-light: #2c3e50;
+    --card-light: #ffffff;
+    --hover-light: #f8f9fa;
+    
+    /* Dark Mode Colors */
+    --bg-dark: #1a1a1a;
+    --text-dark: #ffffff;
+    --sidebar-dark: #2c3e50;
+    --card-dark: #2d2d2d;
+    --hover-dark: #363636;
+}
+
+/* Dark Mode Support */
+body.dark-mode {
+    background-color: var(--bg-dark);
+    color: var(--text-dark);
+}
+
+body.dark-mode .sidebar {
+    background: var(--sidebar-dark);
+}
+
+body.dark-mode .matrix-cell {
+    background: var(--card-dark);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .matrix-cell p {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-mode .priority-item {
+    background: var(--card-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .modal-content {
+    background: var(--card-dark);
+    color: var(--text-dark);
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+    background: var(--hover-dark);
+    color: var(--text-dark);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Mobile Touch Feedback */
+@media (max-width: 768px) {
+    .btn-primary:active,
+    .btn-secondary:active,
+    .nav-item:active,
+    .matrix-cell:active,
+    .priority-item:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+
+    .nav-item {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .nav-item::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%);
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .nav-item:active::after {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+
+    /* Pull to Refresh */
+    .pull-to-refresh {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-light);
+        transform: translateY(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1000;
+    }
+
+    body.dark-mode .pull-to-refresh {
+        background: var(--bg-dark);
+    }
+
+    .pull-to-refresh.active {
+        transform: translateY(0);
+    }
+
+    .pull-to-refresh i {
+        animation: spin 1s linear infinite;
+        color: var(--text-light);
+    }
+
+    body.dark-mode .pull-to-refresh i {
+        color: var(--text-dark);
+    }
+
+    /* Loading States */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .loading-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--bg-light);
+        border-top-color: var(--text-light);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    /* Bottom Sheet Modal */
+    .modal.bottom-sheet .modal-content {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 20px 20px 0 0;
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .modal.bottom-sheet.active .modal-content {
+        transform: translateY(0);
+    }
+
+    /* Swipe to Delete */
+    .swipe-container {
+        position: relative;
+        overflow: hidden;
+        touch-action: pan-y;
+    }
+
+    .swipe-actions {
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        display: flex;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+    }
+
+    .swipe-delete {
+        background: #e74c3c;
+        color: white;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Fix existing styles */
+.matrix-cell {
+    background: var(--card-light);
+    border: 2px solid var(--hover-light);
+}
+
+.priority-item {
+    background: var(--card-light);
+    border: 1px solid var(--hover-light);
+}
+
+.modal-content {
+    background: var(--bg-light);
+    color: var(--text-light);
+}
+
+input, textarea {
+    background: var(--bg-light);
+    color: var(--text-light);
+    border: 1px solid var(--hover-light);
+}
+
+/* Mobile Responsive Fixes */
+@media (max-width: 768px) {
+    .container {
+        grid-template-columns: 1fr;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    .sidebar {
+        position: fixed;
+        left: -250px;
+        top: 0;
+        bottom: 0;
+        width: 250px;
+        z-index: 2000;
+        transition: transform 0.3s ease;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sidebar.active {
+        transform: translateX(250px);
+    }
+    
+    .sidebar-toggle {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--card-light);
+        border: none;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        cursor: pointer;
+    }
+
+    body.dark-mode .sidebar-toggle {
+        background: var(--card-dark);
+        color: var(--text-dark);
+    }
+    
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+        padding-top: 80px;
+        height: 100vh;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Overlay when sidebar is open */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1999;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    
+    .sidebar-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Mobile Game Styles */
+    .game-container {
+        width: 100%;
+        height: 70vh;
+        position: relative;
+        overflow: hidden;
+        border-radius: 15px;
+        background: var(--card-light);
+        touch-action: none;
+    }
+
+    .game-character {
+        width: 40px;
+        height: 40px;
+        position: absolute;
+        bottom: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #3498db;
+        border-radius: 50%;
+        transition: transform 0.1s ease;
+    }
+
+    .game-obstacle {
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        background: #e74c3c;
+        border-radius: 5px;
+    }
+
+    .game-score {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        color: var(--text-light);
+        z-index: 1;
+    }
+
+    .game-start-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 15px 30px;
+        font-size: 18px;
+        border-radius: 10px;
+        background: var(--sidebar-light);
+        color: white;
+        border: none;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    body.dark-mode .game-container {
+        background: var(--card-dark);
+    }
+
+    body.dark-mode .game-score {
+        color: var(--text-dark);
+    }
+}
+
+/* PWA Installation Banner */
+.install-banner {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--card-light);
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.install-banner.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.install-banner button {
+    padding: 8px 15px;
+    border-radius: 6px;
+    border: none;
+    background: var(--sidebar-light);
+    color: white;
+    cursor: pointer;
+}
+
+body.dark-mode .install-banner {
+    background: var(--card-dark);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    position: fixed;
+    bottom: 70px;
+    right: 20px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--card-light);
+    border: none;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+.theme-toggle i {
+    font-size: 1.2rem;
+    color: var(--text-light);
+}
+
+/* Animation for smooth transitions */
+body, .sidebar, .matrix-cell, .modal-content, input, textarea, .btn-primary, .btn-secondary {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// ... rest of existing styles ... 
